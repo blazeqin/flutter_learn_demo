@@ -118,3 +118,11 @@ class _TitleSelection extends StatelessWidget{
 
 }
 
+Widget _buildButtonColumn(BuildContext context,IconData icon, String label){
+  final color = Theme.of(context).primaryColor;
+  return Column(
+    children: <Widget>[
+      Icon(icon),
+    ],
+  );
+}
