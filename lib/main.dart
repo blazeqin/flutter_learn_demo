@@ -102,6 +102,9 @@ class ADemoPageState extends State<ADemoPage> {
             title: Text("List Show"),
           ),
           body:ListView.builder(
+            padding: const EdgeInsets.only(top: 14.0),//只是设置了整个列表的padding
+            scrollDirection: Axis.vertical,
+            itemExtent: 50.0,//设置了item的高度，必须设置scrollDirection才能生效
             itemCount: _buildings.length,
             itemBuilder: (context, index){
               return _ItemView(index, _buildings[index]);
@@ -143,7 +146,15 @@ class _ItemView extends StatelessWidget{
     //水波纹效果，使用的是 InkWell。
     return InkWell(
       onTap: ()=>listener(position),
-      child: widget,
+      child: Column(
+        children: <Widget>[
+          Divider(
+            height: 1.0,
+            color: Colors.grey,
+          ),
+          widget,
+        ],
+      ),
     );
   }
 
