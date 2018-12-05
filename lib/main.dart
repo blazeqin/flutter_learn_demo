@@ -92,42 +92,61 @@ class ADemoPageState extends State<ADemoPage> {
 
   void _toListPage() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return MaterialApp(
-          title: "List show",
-        theme: ThemeData(
-          primaryColor: Colors.orange,
-        ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text("List Show"),
-          ),
-          body:ListView.builder(
-            padding: const EdgeInsets.only(top: 14.0),//只是设置了整个列表的padding
-            scrollDirection: Axis.vertical,
-            itemExtent: 50.0,//设置了item的高度，必须设置scrollDirection才能生效
-            itemCount: _buildings.length,
-            itemBuilder: (context, index){
-              return _ItemView(index, _buildings[index]);
-            },
-          ),
-        )
-      );
+      return _ListPage();
     }));
   }
 }
 
-class _ItemView extends StatelessWidget{
+class _ListPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("List Show"),
+        centerTitle: true,
+        leading: Builder(builder: (context) {
+          return IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+//                    tooltip: "a back button",
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        }),
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.only(top: 14.0),
+        //只是设置了整个列表的padding
+        scrollDirection: Axis.vertical,
+        itemExtent: 50.0,
+        //设置了item的高度，必须设置scrollDirection才能生效
+        itemCount: _buildings.length,
+        itemBuilder: (context, index) {
+          return _ItemView(index, _buildings[index]);
+        },
+      ),
+    );
+  }
+}
+
+class _ItemView extends StatelessWidget {
   final position;
   final Building building;
+
   _ItemView(this.position, this.building);
+
   @override
   Widget build(BuildContext context) {
     final widget = Row(
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(left: 14.0, right: 34.0),
-          child:Icon(
-            building.type == BuildingType.restaurant ? Icons.restaurant : Icons.theaters,
+          child: Icon(
+            building.type == BuildingType.restaurant
+                ? Icons.restaurant
+                : Icons.theaters,
             color: Colors.blue[400],
           ),
         ),
@@ -135,8 +154,17 @@ class _ItemView extends StatelessWidget{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(building.title,style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 14.0),),
-              Text(building.address, style: TextStyle(color: Colors.grey[500]),),
+              Text(
+                building.title,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 14.0),
+              ),
+              Text(
+                building.address,
+                style: TextStyle(color: Colors.grey[500]),
+              ),
             ],
           ),
         ),
@@ -145,7 +173,7 @@ class _ItemView extends StatelessWidget{
     //一般来说，为了监听手势事件，我们使用 GestureDetector。但这里为了在点击的时候有个
     //水波纹效果，使用的是 InkWell。
     return InkWell(
-      onTap: ()=>listener(position),
+      onTap: () => listener(position),
       child: Column(
         children: <Widget>[
           Divider(
