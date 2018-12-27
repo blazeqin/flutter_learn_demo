@@ -4,6 +4,7 @@ import 'package:flutter_learn_demo/pages/NewsListPage.dart';
 import 'package:flutter_learn_demo/pages/TweetsListPage.dart';
 import 'package:flutter_learn_demo/pages/DiscoveryPage.dart';
 import 'package:flutter_learn_demo/pages/MyInfoPage.dart';
+import 'package:flutter_learn_demo/widgets/MyDrawer.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,7 +43,7 @@ class MyAppState extends State<MyApp>{
         ]
       ];
     }
-    _body = IndexedStack(
+    _body = IndexedStack(//仅展示list中的一个view
       children: <Widget>[
         NewsListPage(),
         TweetsListPage(),
@@ -64,10 +65,10 @@ class MyAppState extends State<MyApp>{
         primaryColor: Colors.green[700],
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text("My App", style: TextStyle(color: Colors.white),),
-          iconTheme: IconThemeData(color: Colors.white),
-        ),
+//        appBar: AppBar(
+//          title: Text("My App", style: TextStyle(color: Colors.white),),
+//          iconTheme: IconThemeData(color: Colors.white),
+//        ),
         body: _body,
         bottomNavigationBar: CupertinoTabBar(
           items: getBottomNavItems(),
@@ -79,7 +80,7 @@ class MyAppState extends State<MyApp>{
         },),
         drawer: Drawer(
           child: Center(
-            child: Text("Drawer..."),
+            child: MyDrawer(),
           ),
         ),
       ),
