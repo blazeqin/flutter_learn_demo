@@ -38,10 +38,14 @@ class TweetsListPage extends StatelessWidget{
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: TabBar(tabs: <Widget>[
-            Tab(text: "List",),
-            Tab(text: "Hot",)
-          ]),
+          appBar: TabBar(
+              tabs: <Widget>[
+            Tab(text: "Normal List"),
+            Tab(text: "Hot List",)
+          ],
+            labelColor: Colors.blue[500],
+            unselectedLabelColor: Colors.black,
+          ),
           body: TabBarView(
             children: <Widget>[
               getNormalListView(),getHotListView(),
@@ -70,12 +74,12 @@ class TweetsListPage extends StatelessWidget{
       return Divider(height: 1.0,);
     }else{
       i = i~/2;
-      return getRowWidget(normalTweetsList[i]);
+      return getRowWidget(normalTweetsList[i], i);
     }
 
   }
 
-  Widget getRowWidget(Map<String, dynamic> listItem) {
+  Widget getRowWidget(Map<String, dynamic> listItem, int position) {
     var authorRow = Row(
       children: <Widget>[
         Container(
@@ -106,7 +110,7 @@ class TweetsListPage extends StatelessWidget{
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Text('${listItem['commentCount']}',style: subtitleStyle,),
-              Image.asset("./image/ic_comment.png", width: 16.0, height: 16.0,)
+              Image.asset("./images/ic_comment.png", width: 16.0, height: 16.0,)
             ],
           ),
         )
@@ -162,12 +166,23 @@ class TweetsListPage extends StatelessWidget{
     }
 
     //fourth column
+    columns.add(Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 2.0),
+          child: Text('${listItem['pubDate']}'),
+        ),
+      ],
+    ));
 
     return InkWell(
       child: Column(
         children: columns,
       ),
-      onTap: (){},
+      onTap: (){
+        print('clicked $position');
+      },
     );
   }
 
@@ -184,7 +199,7 @@ class TweetsListPage extends StatelessWidget{
       return Divider(height: 1.0,);
     }else{
       i = i ~/ 2;
-      return getRowWidget(hotTweetsList[i]);
+      return getRowWidget(hotTweetsList[i], i);
     }
 
   }

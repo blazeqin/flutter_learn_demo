@@ -65,10 +65,11 @@ class MyAppState extends State<MyApp>{
         primaryColor: Colors.green[700],
       ),
       home: Scaffold(
-//        appBar: AppBar(
-//          title: Text("My App", style: TextStyle(color: Colors.white),),
-//          iconTheme: IconThemeData(color: Colors.white),
-//        ),
+        appBar: AppBar(
+          title: Text("${appBarTitles[_tabIndex]}",
+            style: TextStyle(color: Colors.white),),
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
         body: _body,
         bottomNavigationBar: CupertinoTabBar(
           items: getBottomNavItems(),

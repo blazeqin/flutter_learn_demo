@@ -17,14 +17,14 @@ class NewsListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "news",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
+//      appBar: AppBar(
+//        title: Text(
+//          "news",
+//          style: TextStyle(color: Colors.white),
+//        ),
+//        centerTitle: true,
+//        iconTheme: IconThemeData(color: Colors.white),
+//      ),
       body: ListView.builder(
         itemBuilder: renderRow,
         itemCount: listData.length * 2 + 1,
