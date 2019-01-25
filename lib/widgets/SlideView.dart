@@ -41,10 +41,11 @@ class SlideViewState extends State<SlideView> with SingleTickerProviderStateMixi
         items.add(GestureDetector(
           onTap: (){
             Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
-              return NewsDetailPage1();//itemData["detailUrl"]
+              return NewsDetailPage();//itemData["detailUrl"]
             }));
           },
           child: Stack(// Stack组件用于将资讯标题文本放置到图片上面
+
               children: <Widget>[
                 Image.network(itemData["imgUrl"]),
                 Container(

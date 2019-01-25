@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 //NewsDetailPage有毒
-class NewsDetailPage1 extends StatelessWidget{
+class NewsDetailPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(

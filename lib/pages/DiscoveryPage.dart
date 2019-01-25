@@ -80,9 +80,10 @@ class DiscoveryPage extends StatelessWidget {
     }else if( item is ListItem) {
       return InkWell(
         onTap: (){
-          print('clicked $i');
+
+          print('clicked ${item.title}');
         },
-        child: Padding(padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+        child: Padding(padding: const EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
         child: Row(
           children: <Widget>[
             getImageIcon(item.icon),

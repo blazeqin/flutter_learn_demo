@@ -19,8 +19,57 @@ class MyInfoPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("my info page"),
+    return ListView.builder(
+      itemCount: titles.length * 2 + 1,
+      itemBuilder: (context, i) => renderRow(context, i),
+    );
+  }
+
+  renderRow(BuildContext context, int position) {
+    if(position == 0) {//header
+      return InkWell(
+        child: Container(
+          color: Colors.green[700],
+          height: 180.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 25.0,
+                backgroundImage: AssetImage("images/ic_img_default.jpg"),
+              ),
+              Padding(padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 0),
+                child: Text("点击头像登录",style: TextStyle(color: Colors.white),),),
+            ],
+          ),
+        ),
+        onTap: (){
+          print('clicked head...');
+        },
+      );
+    }
+    if(position.isOdd) {
+      return Divider(height: 1.0,);
+    }
+    position = position ~/ 2;
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10.0, 17.0, 10.0, 17.0),
+        child: Row(
+          children: <Widget>[
+            Image.asset(imagePaths[position-1],width: ICON_IMAGE_WIDTH,height: ICON_IMAGE_WIDTH,),
+            Expanded(
+              child: Text(titles[position-1]),
+            ),
+            Image.asset('images/ic_arrow_right.png',
+              width: ICON_ARROW_WIDTH,
+              height: ICON_ARROW_WIDTH,),
+          ],
+        ),
+      ),
+      onTap: (){
+        print('clicked $position');
+      },
     );
   }
 

@@ -1,54 +1,59 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_learn_demo/pages/NewsDetailPage1.dart';
+import 'package:flutter_learn_demo/api/Api.dart';
+import 'package:flutter_learn_demo/utils/Constants.dart';
+import 'package:flutter_learn_demo/utils/NetUtils.dart';
 import 'package:flutter_learn_demo/widgets/SlideView.dart';
 
-class NewsListPage extends StatelessWidget {
+class NewsListPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => NewsListPageState();
+}
+
+class NewsListPageState extends State<NewsListPage> {
   var slideData; //banner
   var listData; // list item data
+  int curPage = 1;
+  int listTotalSize = 0;
   var titleTextStyle = TextStyle(fontSize: 15.0);
   var subtitleStyle = TextStyle(color: Color(0xffb5bdc0), fontSize: 12.0);
+  ScrollController _controller = ScrollController();
 
-  NewsListPage() {
-    slideData = [];
-    listData = [];
-    initData();
+
+  NewsListPageState() {
+//    slideData = [];
+//    listData = [];
+    _controller.addListener((){
+      var maxScroll = _controller.position.maxScrollExtent;
+      var pixels = _controller.position.pixels;
+      if(maxScroll == pixels && listData.length < listTotalSize) {
+        curPage++;
+        getNewsList(true);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-//      appBar: AppBar(
-//        title: Text(
-//          "news",
-//          style: TextStyle(color: Colors.white),
-//        ),
-//        centerTitle: true,
-//        iconTheme: IconThemeData(color: Colors.white),
-//      ),
-      body: ListView.builder(
-        itemBuilder: renderRow,
-        itemCount: listData.length * 2 + 1,
-      ),
-//      body: Center(
-//        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-//          children: <Widget>[
-//            Text("news list..bla bla"),
-//            RaisedButton(
-//              child: Text("Back"),
-//              onPressed: (){
-////                Navigator.of(context).pop();//点击之后黑屏。。。
-//                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
-//                    return NewsDetailPage1();
-//                  }));
-//              },
-//            )
-//          ],
-//        ),
-//      ),
-    );
+    if(listData == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return RefreshIndicator(child: ListView.builder(
+      itemBuilder: renderRow,
+      itemCount: listData.length * 2 + 1,
+      controller: _controller,
+    ), onRefresh: _pullToRefresh);
   }
 
+  @override
+  void initState() {
+    super.initState();
+    getNewsList(false);
+  }
   void initData() {
     // 这里做数据初始化，加入一些测试数据
     for (int i = 0; i < 3; i++) {
@@ -57,10 +62,10 @@ class NewsListPage extends StatelessWidget {
       map['title'] = 'Python 之父透露退位隐情，与核心开发团队产生隔阂';
       // 轮播图的详情URL
       map['detailUrl'] =
-          'https://www.oschina.net/news/98455/guido-van-rossum-resigns';
+      'https://www.oschina.net/news/98455/guido-van-rossum-resigns';
       // 轮播图的图片URL
       map['imgUrl'] =
-          'https://static.oschina.net/uploads/img/201807/30113144_1SRR.png';
+      'https://static.oschina.net/uploads/img/201807/30113144_1SRR.png';
       slideData.add(map);
     }
     for (int i = 0; i < 30; i++) {
@@ -140,7 +145,7 @@ class NewsListPage extends StatelessWidget {
       ],
     );
     var thumbImg =
-        getImageWidget(ExactAssetImage("./images/ic_img_default.jpg"));
+    getImageWidget(ExactAssetImage("./images/ic_img_default.jpg"));
     if (itemData["thumb"] != null && itemData["thumb"].length > 0) {
       thumbImg = getImageWidget(NetworkImage(itemData["thumb"]));
     }
@@ -196,5 +201,45 @@ class NewsListPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getNewsList(bool isLoadMore) {
+    var url = Api.LIST_NEWS;
+    var params = Map<String,String>();
+    params['pageIndex'] = '$curPage';
+    params['pageSize'] = '10';
+    //then方法获取返回的值
+    NetUtils.get(url, params: params).then((data){
+      if(data != null) {
+        Map<String,dynamic> map = json.decode(data);
+        print('${map.toString()}');
+        if(map['code'] == 0) {
+          var msg = map['msg'];
+          listTotalSize = msg['news']['total'];
+          var _listData = msg['news']['data'];
+          var _slideData = msg['slide'];
+          setState(() {
+            if(!isLoadMore) {
+              listData = _listData;
+            }else{
+              List tmpList = List();
+              tmpList.add(listData);
+              tmpList.add(_listData);
+              if(tmpList.length >= listTotalSize) {
+                tmpList.add(Constants.END_LINE_TAG);
+              }
+              listData = tmpList;
+            }
+            slideData = _slideData;
+          });
+        }
+      }
+    });
+  }
+
+  Future<void> _pullToRefresh() async{
+    curPage = 1;
+    getNewsList(false);
+    return null;
   }
 }
