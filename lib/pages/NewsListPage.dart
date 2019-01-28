@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_learn_demo/api/Api.dart';
+import 'package:flutter_learn_demo/pages/NewsDetailPage1.dart';
 import 'package:flutter_learn_demo/utils/Constants.dart';
 import 'package:flutter_learn_demo/utils/NetUtils.dart';
 import 'package:flutter_learn_demo/widgets/SlideView.dart';
@@ -28,6 +29,7 @@ class NewsListPageState extends State<NewsListPage> {
       var maxScroll = _controller.position.maxScrollExtent;
       var pixels = _controller.position.pixels;
       if(maxScroll == pixels && listData.length < listTotalSize) {
+        print('load more...');
         curPage++;
         getNewsList(true);
       }
@@ -43,7 +45,7 @@ class NewsListPageState extends State<NewsListPage> {
     }
 
     return RefreshIndicator(child: ListView.builder(
-      itemBuilder: renderRow,
+      itemBuilder: (_, index) => renderRow(index),
       itemCount: listData.length * 2 + 1,
       controller: _controller,
     ), onRefresh: _pullToRefresh);
@@ -54,6 +56,7 @@ class NewsListPageState extends State<NewsListPage> {
     super.initState();
     getNewsList(false);
   }
+
   void initData() {
     // 这里做数据初始化，加入一些测试数据
     for (int i = 0; i < 3; i++) {
@@ -86,7 +89,7 @@ class NewsListPageState extends State<NewsListPage> {
     }
   }
 
-  Widget renderRow(BuildContext context, int index) {
+  Widget renderRow(index) {
     if (index == 0) {
       //banner
       return Container(
@@ -179,7 +182,7 @@ class NewsListPageState extends State<NewsListPage> {
     return InkWell(
       child: row,
       onTap: (){
-        print("tap ...$index");
+        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> NewsDetailPage(url: itemData['detailUrl'])));
       },
     );
   }
@@ -223,8 +226,8 @@ class NewsListPageState extends State<NewsListPage> {
               listData = _listData;
             }else{
               List tmpList = List();
-              tmpList.add(listData);
-              tmpList.add(_listData);
+              tmpList.addAll(listData);//add 和addall的区别，一个bug搞半天。。。
+              tmpList.addAll(_listData);
               if(tmpList.length >= listTotalSize) {
                 tmpList.add(Constants.END_LINE_TAG);
               }
@@ -237,7 +240,7 @@ class NewsListPageState extends State<NewsListPage> {
     });
   }
 
-  Future<void> _pullToRefresh() async{
+  Future<Null> _pullToRefresh() async{
     curPage = 1;
     getNewsList(false);
     return null;
