@@ -34,23 +34,25 @@ class NewsDetailPageState extends State<NewsDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> titleContent = [];
-    titleContent.add(Text("Details", style: TextStyle(color: Colors.white),));
-    if(!loaded) {
-      titleContent.add(CupertinoActivityIndicator());
-    }
-    titleContent.add(Container(
-      width: 40.0,
-    ));
+//    List<Widget> titleContent = [];
+//    titleContent.add(Text("Details", style: TextStyle(color: Colors.white),));
+//    if(!loaded) {
+//      titleContent.add(CupertinoActivityIndicator());
+//    }
+//    titleContent.add(Container(
+//      width: 40.0,
+//    ));
     return WebviewScaffold(
       url: this.url,
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Details", style: TextStyle(color: Colors.white)),
-          ],
-        ),
+//        title: Row(
+//          mainAxisAlignment: MainAxisAlignment.center,
+//          children: <Widget>[
+//            Text("Details", style: TextStyle(color: Colors.white)),
+//          ],
+//        ),
+        title: Text("Details",style: TextStyle(color: Colors.white),),
+        centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
       ),
       withJavascript: true,
